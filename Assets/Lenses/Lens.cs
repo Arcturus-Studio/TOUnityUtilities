@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 
 public class Lens<T>{
-  public int priority;
+	public int priority;
 	public Func<T,T> transformation;
 	public Lens(int priority, Func<T,T> transformation){
 		this.priority = priority;

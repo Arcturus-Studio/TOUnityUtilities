@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public static class VectorEx{
-  public static Vector3 ReplaceX(this Vector3 lhs, float val){
+	public static Vector3 ReplaceX(this Vector3 lhs, float val){
 		lhs.x = val;
 		return lhs;
 	}

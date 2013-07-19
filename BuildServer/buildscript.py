@@ -23,7 +23,7 @@ def unityBuildFolder():
 		itemlist = xmldoc.getElementsByTagName('build')
 		return itemlist[0].attributes['folder'].value
 	else:
-		print "Build server preferences not found. Please create or move BuildServerPrefs.xml to " + gitDirectory + " aaa " + xmlPrefPath
+		print "Build server preferences not found. Please create or move BuildServerPrefs.xml to " + gitDirectory
 		quit()
 
 def makebuild(platform):
@@ -98,7 +98,7 @@ def makezipfiles(platform, branch):
 			zip.close()
 			#       shutil.rmtree(file)
 			
-			destinationDirectory = nightlyBuildDirectory + os.sep + branch + platform
+			destinationDirectory = nightlyBuildDirectory + os.sep + branch + os.sep + platform
 			if not os.path.isdir(nightlyBuildDirectory):
 				os.makedirs(nightlyBuildDirectory)
 			if not os.path.isdir(destinationDirectory):
@@ -131,6 +131,21 @@ def validatePlatformArguments(platforms):
 			parser.error("Platform is not supported. Try ios, mac, or windows")
 			quit()
 
+def createLocalBranchesForRepo(repo):
+	git = repo.git
+
+	for remoteBranch in repo.refs:
+
+    	needsLocalBranch = True
+
+    	for localBranch in repo.branches:
+        	print "Local branch " + localBranch.name + " Remote branch " + remoteBranch.name
+        	if localBranch.name == remoteBranch.name:
+            	needsLocalBranch = False
+
+    	if needsLocalBranch == True:
+       		git.checkout(remoteBranch.name, b=remoteBranch.name)
+
 if __name__ == '__main__':
 	
 	parser = optparse.OptionParser()
@@ -142,6 +157,7 @@ if __name__ == '__main__':
 	
 	if os.path.exists(gitDirectory):
 		repo = git.Repo(gitDirectory)
+		createLocalBranchesForRepo(repo)
 		buildNeededBranchesForRepo(repo, options.branches)
 	else:
 		print "Error: Git repo does not exist: %s" % gitDirectory

@@ -9,14 +9,14 @@ from xml.dom import minidom
 
 buildPlatforms = []
 gitDirectory = ""
-nightlyBuildDirectory = os.getcwd() + "/builds/nightlies"
+nightlyBuildDirectory = os.getcwd() + os.sep + "builds" + os.sep + "nightlies"
 windowsUnityPath = "C:\Program Files (x86)\Unity\Editor\Unity.exe"
 macUnityPath = "/Applications/Unity/Unity.app/Contents/MacOS/Unity"
 supportedPlatforms = ["mac", "windows", "ios"];
 
 def unityBuildFolder():
 	
-	xmlPrefPath = gitDirectory + "/BuildServerPrefs.xml"
+	xmlPrefPath = gitDirectory + os.sep + "BuildServerPrefs.xml"
 	
 	if os.path.isfile(xmlPrefPath):
 		xmldoc = minidom.parse(xmlPrefPath)
@@ -48,7 +48,7 @@ def makebuild(platform):
 	if platform == 'ios':
 		methodName = "BuildAutomation.MakeiOSBuild"
 	
-	projectDirectory = os.getcwd() + "/" + gitDirectory + unityBuildFolder()
+	projectDirectory = os.getcwd() + os.sep + gitDirectory + unityBuildFolder()
 	print projectDirectory
 	
 	if projectDirectory != "":
@@ -94,17 +94,17 @@ def buildNeededBranchesForRepo(repo, branches):
 			print "Branch " + branch + " doesn't exist"
 
 def makezipfiles(platform, branch):
-	unityBuildDir = gitDirectory + unityBuildFolder() + "/builds"
+	unityBuildDir = gitDirectory + unityBuildFolder() + os.sep + "builds"
 	files = filesInDirectory(unityBuildDir)
 	for file in files:
 		zipfilename = (file + '.zip')
 		if not os.path.isfile(zipfilename):
 			zip = zipfile.ZipFile(zipfilename, 'w')
-			zipdir(unityBuildDir + "/" + file, zip)
+			zipdir(unityBuildDir + os.sep + file, zip)
 			zip.close()
 			#       shutil.rmtree(file)
 			
-			destinationDirectory = nightlyBuildDirectory + "/" + branch
+			destinationDirectory = nightlyBuildDirectory + os.sep + branch
 			if not os.path.isdir(nightlyBuildDirectory):
 				os.makedirs(nightlyBuildDirectory)
 			if not os.path.isdir(destinationDirectory):

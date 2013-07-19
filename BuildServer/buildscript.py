@@ -59,12 +59,6 @@ def makebuild(platform):
 			quit()
 
 def zipdir(dir, zip):
-	#assert(isinstance(zip,ZipFile) == True)
-	print "dir: " + dir
-	
-	if os.path.isdir(dir):
-		print "its a dir"
-	
 	for root, dirs, files in os.walk(dir):
 		for file in files:
 			zip.write(os.path.join(root, file))
@@ -104,7 +98,7 @@ def makezipfiles(platform, branch):
 			zip.close()
 			#       shutil.rmtree(file)
 			
-			destinationDirectory = nightlyBuildDirectory + os.sep + branch
+			destinationDirectory = nightlyBuildDirectory + os.sep + branch + platform
 			if not os.path.isdir(nightlyBuildDirectory):
 				os.makedirs(nightlyBuildDirectory)
 			if not os.path.isdir(destinationDirectory):

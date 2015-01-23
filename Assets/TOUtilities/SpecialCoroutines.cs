@@ -60,12 +60,20 @@ public class Coroutine<T>{
 				yield break;
 			}
 			object yielded = coroutine.Current;
-			if(yielded != null && yielded is T){
-				returnVal = (T)yielded;
-				yield break;
-			}
-			else{
-				yield return coroutine.Current;
+
+			// Support nested special Coroutines by returning the underlying
+			// system coroutine so that Unity will recognise it and process it.
+			// Otherwise we will continue executing on the next frame.
+			if (yielded is Coroutine<T>) {
+				yield return (yielded as Coroutine<T>).coroutine;
+			} else {
+				if(yielded != null && yielded is T){
+					returnVal = (T)yielded;
+					yield break;
+				}
+				else{
+					yield return coroutine.Current;
+				}
 			}
 		}
 	}
